@@ -4,17 +4,23 @@
     import { Sprout, Eye, EyeOff } from "@lucide/svelte";
 	import { goto } from "$app/navigation";
 
-    const demo_id = "2022307166";
-    const demo_pw = "helloworld";
+    const demo_id_farmer = "farmer";
+    const demo_pw_farmer= "farmer123";
+    const demo_id_admin = "admin";
+    const demo_pw_admin = "admin123";
 
     let id_input = $state("");
     let pw_input = $state("");
     let show_pw = $state(false);
 
     function handleLogin() {
-        if (id_input === demo_id && pw_input === demo_pw) {
+        if (id_input === demo_id_farmer && pw_input === demo_pw_farmer) {
             alert("Login successful!");
             goto('/farmer');
+        } 
+        else if (id_input === demo_id_admin && pw_input === demo_pw_admin) {
+            alert("Login successful!");
+            goto('/admin');
         } 
         else {
             alert("Invalid ID or password. Please try again.");

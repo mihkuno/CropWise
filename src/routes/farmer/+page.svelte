@@ -320,6 +320,7 @@
 
     function startFarming() {
         alert(translations[language].multiCropSuccess);
+        goto('/history');
     }
 </script>
 
