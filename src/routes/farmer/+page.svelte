@@ -3,12 +3,204 @@
     import { goto } from "$app/navigation";
 
     // State variables
-    let language = 'English';
+    let language = 'English'; // Initial language
     let selectedFarm = null;
     let showSoilWeather = false;
     let showCrops = false;
     let selectedCrop = null;
     let showSuggestions = false;
+
+    // Translation dictionaries
+    const translations = {
+        'English': {
+            welcome: 'Welcome, Juan Carlos Santos',
+            logout: 'Logout',
+            history: 'History',
+            myFarms: 'My Farms',
+            selectFarmDetails: 'Select your farm and we\'ll show you details.',
+            selectFarmButton: 'Select Farm',
+            soilHealth: 'Soil Health',
+            summary: 'Summary',
+            lowSalinity: 'Low salinity is ideal for most vegetable crops. Good moisture retention suitable for current season planting. Consider adding compost or organic fertilizers to improve soil structure.',
+            weatherForecast: 'Weather Forecast',
+            todayIs: 'Today is August 27, 2025 • Wet Season (Southwest Monsoon)',
+            day: 'Day',
+            night: 'Night',
+            partlyCloudy: 'Partly Cloudy',
+            humidity: 'Humidity',
+            precipitation: 'Precipitation',
+            windSpeed: 'Wind Speed',
+            sunny: 'Sunny',
+            showers: 'Showers',
+            cloudy: 'Cloudy',
+            heavyRain: 'Heavy Rain',
+            southwestMonsoon: 'Southwest monsoon pattern typical for August. High humidity Thursday may require disease monitoring. Overall weather supports current season crop establishment.',
+            generateAIPlan: 'Generate AI Plan',
+            recommendedCrops: 'Recommended Crops',
+            selectStartingCrop: 'Select your starting crop and we\'ll plan your crop rotation.',
+            selectCropButton: 'Select Crop',
+            multiCroppingSuggestions: 'Multi-Cropping Suggestions',
+            goodCompanions: 'Good Companions (Plant Together)',
+            badNeighbors: 'Bad Neighbors (Avoid Planting Together)',
+            afterHarvest: 'After Harvest Succession',
+            afterHarvestDesc: 'These crops will benefit from leftover nutrients after tomato harvest:',
+            multiCropTimeline: 'Multi-Crop Planting Timeline',
+            landPreparation: 'Week 1-2 (Land Preparation)',
+            soilPrepDetails: 'Till soil, add compost (2 tons/hectare). Apply base fertilizer: 14-14-14 NPK (200kg/hectare).',
+            plantCarrotTomato: 'Plant: Carrot seeds directly, start tomato seedlings in nursery',
+            transplanting: 'Week 3-4 (Transplanting)',
+            transplantTomatoesBasil: 'Transplant 3-week-old tomato seedlings (60cm spacing). Plant basil seedlings around tomatoes.',
+            careDailyWatering: 'Care: Daily watering, install stakes for tomatoes',
+            firstSideDress: 'Week 6-8 (First Side Dress)',
+            sideDressingMaintenance: 'Apply first side dress fertilizer: Urea (50kg/hectare). Harvest baby carrots for thinning.',
+            pruneTomatoSuckers: 'Care: Prune tomato suckers, tie to stakes, weed management',
+            floweringStage: 'Week 10-12 (Flowering Stage)',
+            floweringSecondFertilizer: 'Tomatoes flowering, apply phosphorus-rich fertilizer (16-20-0). Harvest mature carrots.',
+            mainHarvestPeriod: 'Week 14-18 (Fruiting & Harvest)',
+            peakTomatoHarvest: 'Peak tomato harvest begins. Apply final fertilizer: high-potassium (0-0-50).',
+            harvestContinuous: 'Harvest: Continuous tomato picking, weekly basil harvest, prepare succession beds',
+            successionPlanting: 'Week 20+ (Succession Planting)',
+            endCyclePlantNext: 'Final tomato harvest, clear beds. Plant leafy greens or beans for succession crop.',
+            prepSoilTest: 'Prep: Soil test, add organic matter, plan next rotation cycle',
+            startFarming: 'Start Farming',
+            multiCropSuccess: '🎉 Multi-crop suggestion successful! Your farming plan has been created and saved. You can now begin implementing your optimized crop rotation schedule.',
+
+            // Farm specific details
+            kalinawanDetails: '12.5 hectares • Clay-loam soil',
+            malasagDetails: '8.2 hectares • Sandy-loam soil',
+            kalinawanLocation: 'Cagayan De Oro, Misamis Oriental',
+            malasagLocation: 'Malaybalay, Bukidnon',
+
+            // Crop specific descriptions
+            tomatoDescription: 'Thrives in clay-loam soil with good drainage. High potassium supports fruit development. Current weather pattern ideal for transplanting.',
+            eggplantDescription: 'Excellent nitrogen uptake matches your soil profile. Heat-tolerant variety perfect for current season. Good rotation crop after rice.',
+            okraDescription: 'Low phosphorus requirement suits your soil. Drought-resistant backup for dry spells. Fast-growing summer crop.',
+
+            // Companion planting
+            basilName: 'Basil',
+            basilDesc: 'Repels pests, improves tomato flavor. Plant 30cm away from tomato base.',
+            basilTags: ['Pest Control', 'Flavor Enhancer', 'Space Efficient'],
+            carrotsName: 'Carrots',
+            carrotsDesc: 'Aerates soil, different root depth. Harvest before tomatoes need more space.',
+            carrotsTags: ['Soil Improvement', 'Early Harvest', 'Root Diversity'],
+            lettuceName: 'Lettuce',
+            lettuceDesc: 'Ground cover reduces weeds, cool-season crop. Plant between tomato rows.',
+            lettuceTags: ['Ground Cover', 'Quick Growing', 'Weed Control'],
+            onionsName: 'Onions',
+            onionsDesc: 'Natural pest deterrent, different nutrient needs. Border planting recommended.',
+            onionsTags: ['Pest Deterrent', 'Sulfur Benefits', 'Perimeter Plant'],
+            
+            // Bad neighbors
+            potatoesName: 'Potatoes',
+            potatoesDesc: 'Both are nightshades, compete for nutrients. Share same diseases and pests.',
+            potatoesTags: ['Disease Risk', 'Nutrient Competition', 'Same Family'],
+            cornName: 'Corn',
+            cornDesc: 'Heavy nitrogen user, creates too much shade. Attracts tomato fruitworm.',
+            cornTags: ['Heavy Feeder', 'Shading Issues', 'Pest Attraction'],
+
+            // After harvest
+            leafyGreensName: 'Leafy Greens (Pechay, Kangkong)',
+            leafyGreensDesc: 'Will use remaining nitrogen efficiently. Quick 30-45 day harvest cycle.',
+            leafyGreensTags: ['Nitrogen Utilization', 'Fast Growing', 'Cool Season'],
+            beansName: 'Beans',
+            beansDesc: 'Nitrogen-fixing legume restores soil nutrients. Improves soil for next crop cycle.',
+            beansTags: ['Soil Restoration', 'Nitrogen Fixing', 'Protein Crop'],
+        },
+        'Filipino': {
+            welcome: 'Maligayang Pagdating, Juan Carlos Santos',
+            logout: 'Mag-logout',
+            history: 'Kasaysayan',
+            myFarms: 'Aking mga Bukid',
+            selectFarmDetails: 'Pumili ng iyong bukid at ipapakita namin ang mga detalye.',
+            selectFarmButton: 'Pumili ng Bukid',
+            soilHealth: 'Kalusugan ng Lupa',
+            summary: 'Buod',
+            lowSalinity: 'Ang mababang kaasinan ay perpekto para sa karamihan ng mga gulay. Magandang pagpapanatili ng kahalumigmigan na angkop para sa kasalukuyang pagtatanim. Isaalang-alang ang pagdaragdag ng compost o organikong pataba upang mapabuti ang istraktura ng lupa.',
+            weatherForecast: 'Pagtataya ng Panahon',
+            todayIs: 'Ngayon ay Agosto 27, 2025 • Tag-ulan (Southwest Monsoon)',
+            day: 'Araw',
+            night: 'Gabi',
+            partlyCloudy: 'Bahagyang Maulap',
+            humidity: 'Halumigmig',
+            precipitation: 'Pag-ulan',
+            windSpeed: 'Bilis ng Hangin',
+            sunny: 'Maaraw',
+            showers: 'Ulan',
+            cloudy: 'Maulap',
+            heavyRain: 'Malakas na Ulan',
+            southwestMonsoon: 'Karaniwan ang pattern ng Southwest monsoon para sa Agosto. Ang mataas na halumigmig sa Huwebes ay maaaring mangailangan ng pagsubaybay sa sakit. Ang pangkalahatang panahon ay sumusuporta sa pagtatatag ng pananim sa kasalukuyang panahon.',
+            generateAIPlan: 'Bumuo ng Plano ng AI',
+            recommendedCrops: 'Mga Inirerekomendang Pananim',
+            selectStartingCrop: 'Pumili ng iyong panimulang pananim at planuhin namin ang iyong pag-ikot ng pananim.',
+            selectCropButton: 'Pumili ng Pananim',
+            multiCroppingSuggestions: 'Mga Mungkahi sa Multi-Cropping',
+            goodCompanions: 'Magandang Kasama (Itanim Nang Magkasama)',
+            badNeighbors: 'Masamang Kapitbahay (Iwasan ang Pagtatanim Nang Magkasama)',
+            afterHarvest: 'Pagkatapos ng Ani (Pagsusunod-sunod)',
+            afterHarvestDesc: 'Ang mga pananim na ito ay makikinabang mula sa mga natitirang sustansya pagkatapos ng pag-ani ng kamatis:',
+            multiCropTimeline: 'Timeline ng Pagtatanim ng Multi-Crop',
+            landPreparation: 'Linggo 1-2 (Paghahanda ng Lupa)',
+            soilPrepDetails: 'Araruhin ang lupa, magdagdag ng compost (2 tonelada/ektarya). Maglagay ng base fertilizer: 14-14-14 NPK (200kg/ektarya).',
+            plantCarrotTomato: 'Itanim: Direktang buto ng karot, simulan ang mga punla ng kamatis sa nursery',
+            transplanting: 'Linggo 3-4 (Pagtatanim)',
+            transplantTomatoesBasil: 'Itanim ang 3-linggong gulang na punla ng kamatis (60cm pagitan). Itanim ang mga punla ng basil sa paligid ng kamatis.',
+            careDailyWatering: 'Pangangalaga: Araw-araw na pagdidilig, maglagay ng mga patpat para sa kamatis',
+            firstSideDress: 'Linggo 6-8 (Unang Side Dress)',
+            sideDressingMaintenance: 'Ilagay ang unang side dress fertilizer: Urea (50kg/ektarya). Anihin ang mga sanggol na karot para sa pagbabawas.',
+            pruneTomatoSuckers: 'Pangangalaga: Pruning ng mga suwi ng kamatis, itali sa mga patpat, pamamahala ng damo',
+            floweringStage: 'Linggo 10-12 (Yugto ng Pamumulaklak)',
+            floweringSecondFertilizer: 'Namumulaklak ang kamatis, maglagay ng mayaman sa posporus na pataba (16-20-0). Anihin ang mga hinog na karot.',
+            mainHarvestPeriod: 'Linggo 14-18 (Pamumunga at Pag-ani)',
+            peakTomatoHarvest: 'Nagsisimula ang rurok ng pag-ani ng kamatis. Maglagay ng huling pataba: mataas na potassium (0-0-50).',
+            harvestContinuous: 'Pag-ani: Patuloy na pagpitas ng kamatis, lingguhang pag-ani ng basil, ihanda ang mga sunud-sunod na kama',
+            successionPlanting: 'Linggo 20+ (Pagsusunod-sunod na Pagtatanim)',
+            endCyclePlantNext: 'Huling pag-ani ng kamatis, linisin ang mga kama. Magtanim ng mga dahon gulay o beans para sa sunud-sunod na pananim.',
+            prepSoilTest: 'Paghahanda: Pagsusuri ng lupa, magdagdag ng organikong bagay, planuhin ang susunod na ikot ng pag-ikot',
+            startFarming: 'Simulan ang Pagsasaka',
+            multiCropSuccess: '🎉 Matagumpay ang mungkahi sa multi-crop! Nalikha at nai-save ang iyong plano sa pagsasaka. Maaari mo nang simulan ang pagpapatupad ng iyong na-optimize na iskedyul ng pag-ikot ng pananim.',
+
+            // Farm specific details
+            kalinawanDetails: '12.5 ektarya • Clay-loam na lupa',
+            malasagDetails: '8.2 ektarya • Sandy-loam na lupa',
+            kalinawanLocation: 'Cagayan De Oro, Misamis Oriental',
+            malasagLocation: 'Malaybalay, Bukidnon',
+
+            // Crop specific descriptions
+            tomatoDescription: 'Umuunlad sa clay-loam na lupa na may mahusay na paagusan. Ang mataas na potassium ay sumusuporta sa pagbuo ng prutas. Ang kasalukuyang pattern ng panahon ay perpekto para sa pagtatanim.',
+            eggplantDescription: 'Ang mahusay na nitrogen uptake ay tumutugma sa iyong profile ng lupa. Ang uri na lumalaban sa init ay perpekto para sa kasalukuyang panahon. Magandang pananim na iikot pagkatapos ng palay.',
+            okraDescription: 'Ang mababang pangangailangan sa phosphorus ay angkop sa iyong lupa. Drought-resistant na backup para sa tagtuyot. Mabilis lumaki na pananim sa tag-araw.',
+
+            // Companion planting
+            basilName: 'Basil',
+            basilDesc: 'Nagtataboy ng peste, nagpapabuti ng lasa ng kamatis. Itanim nang 30cm ang layo mula sa base ng kamatis.',
+            basilTags: ['Kontrol sa Peste', 'Pampabuti ng Lasa', 'Episyenteng Espasyo'],
+            carrotsName: 'Karot',
+            carrotsDesc: 'Nagpapahangin sa lupa, iba\'t ibang lalim ng ugat. Anihin bago kailanganin ng kamatis ang mas maraming espasyo.',
+            carrotsTags: ['Pagpapabuti ng Lupa', 'Maagang Pag-ani', 'Pagkakaiba-iba ng Ugat'],
+            lettuceName: 'Litsugas',
+            lettuceDesc: 'Ang takip sa lupa ay nagpapababa ng damo, pananim sa malamig na panahon. Itanim sa pagitan ng mga hanay ng kamatis.',
+            lettuceTags: ['Takip sa Lupa', 'Mabilis Lumaki', 'Kontrol sa Damo'],
+            onionsName: 'Sibuyas',
+            onionsDesc: 'Natural na panlaban sa peste, iba\'t ibang pangangailangan sa sustansya. Inirerekomenda ang pagtatanim sa hangganan.',
+            onionsTags: ['Panlaban sa Peste', 'Mga Benepisyo ng Sulfur', 'Pagtatanim sa Perimeter'],
+
+            // Bad neighbors
+            potatoesName: 'Patatas',
+            potatoesDesc: 'Parehong nightshades, nakikipagkumpitensya sa sustansya. Nagbabahagi ng parehong sakit at peste.',
+            potatoesTags: ['Panganib sa Sakit', 'Kumpetisyon sa Sustansya', 'Parehong Pamilya'],
+            cornName: 'Mais',
+            cornDesc: 'Mabigat na gumagamit ng nitrogen, lumilikha ng sobrang lilim. Umaakit sa tomato fruitworm.',
+            cornTags: ['Mabigat na Kumakain', 'Mga Isyu sa Paglilim', 'Pag-akit ng Peste'],
+
+            // After harvest
+            leafyGreensName: 'Dahon Gulay (Pechay, Kangkong)',
+            leafyGreensDesc: 'Gagamitin ang natitirang nitrogen nang mahusay. Mabilis na 30-45 araw na siklo ng pag-ani.',
+            leafyGreensTags: ['Paggamit ng Nitrogen', 'Mabilis Lumaki', 'Malamig na Panahon'],
+            beansName: 'Beans',
+            beansDesc: 'Ang legume na nag-aayos ng nitrogen ay nagpapanumbalik ng mga sustansya sa lupa. Nagpapabuti ng lupa para sa susunod na ikot ng pananim.',
+            beansTags: ['Pagpapanumbalik ng Lupa', 'Pag-aayos ng Nitrogen', 'Pananim na Protina'],
+        }
+    };
 
     // Farms data
     const farms = [
@@ -16,15 +208,15 @@
             id: 'kalinawan',
             name: 'Kalinawan Farm',
             icon: '🌾',
-            details: '12.5 hectares • Clay-loam soil',
-            location: 'Cagayan De Oro, Misamis Oriental'
+            get details() { return translations[language].kalinawanDetails; },
+            get location() { return translations[language].kalinawanLocation; }
         },
         {
             id: 'malasag',
             name: 'Malasag Organic Farm',
             icon: '🥕',
-            details: '8.2 hectares • Sandy-loam soil',
-            location: 'Malaybalay, Bukidnon'
+            get details() { return translations[language].malasagDetails; },
+            get location() { return translations[language].malasagLocation; }
         }
     ];
 
@@ -35,7 +227,7 @@
             name: 'Tomato',
             icon: '🍅',
             category: 'Fruit Vegetable',
-            description: 'Thrives in clay-loam soil with good drainage. High potassium supports fruit development. Current weather pattern ideal for transplanting.',
+            get description() { return translations[language].tomatoDescription; },
             details: {
                 growth: '75-85 days',
                 water: 'Moderate',
@@ -50,7 +242,7 @@
             name: 'Eggplant',
             icon: '🍆',
             category: 'Fruit Vegetable',
-            description: 'Excellent nitrogen uptake matches your soil profile. Heat-tolerant variety perfect for current season. Good rotation crop after rice.',
+            get description() { return translations[language].eggplantDescription; },
             details: {
                 growth: '70-80 days',
                 water: 'Moderate - High',
@@ -65,7 +257,7 @@
             name: 'Okra',
             icon: '🌱',
             category: 'Pod Vegetable',
-            description: 'Low phosphorus requirement suits your soil. Drought-resistant backup for dry spells. Fast-growing summer crop.',
+            get description() { return translations[language].okraDescription; },
             details: {
                 growth: '50-65 days',
                 water: 'Low - Moderate',
@@ -127,7 +319,7 @@
     }
 
     function startFarming() {
-        alert('🎉 Multi-crop suggestion successful! Your farming plan has been created and saved. You can now begin implementing your optimized crop rotation schedule.');
+        alert(translations[language].multiCropSuccess);
     }
 </script>
 
@@ -140,43 +332,43 @@
             </div>
             <div>
                 <p class="text-3xl font-bold text-white">CropWise</p>
-                <p class="text-sm font-semibold text-white">Welcome, Juan Carlos Santos</p>
+                <p class="text-sm font-semibold text-white">{translations[language].welcome}</p>
             </div>
         </div>
-        <button 
+        <button
             type="button"
             onclick={handleLogout}
             class="ml-10 bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 cursor-pointer">
-            Logout</button>
+            {translations[language].logout}</button>
     </div>
 
     <!-- pills for history and language -->
     <div class="flex gap-2 w-full">
-        <button 
+        <button
             onclick={toggleLanguage}
             class="flex items-center gap-2 px-4.5 py-2.5 rounded- font-semibold bg-white rounded-2xl shadow-2xl cursor-pointer hover:opacity-90">
             <Globe size="20" />
             <p class="text-sm">{language}</p>
         </button>
-        <button 
+        <button
             onclick={goToHistory}
             class="flex items-center gap-2 px-4.5 py-2.5 rounded- font-semibold bg-white rounded-2xl shadow-2xl cursor-pointer hover:opacity-90">
             <History size="20" />
-            <p class="text-sm">History</p>
+            <p class="text-sm">{translations[language].history}</p>
         </button>
     </div>
 
     <div class="flex flex-col gap-4 p-6 bg-white/50 rounded-xl shadow-2xl w-full">
         <div class="flex items-center gap-2">
             <MapPin size="30" color="#84c059" />
-            <p class="font-bold text-lg">My Farms</p>
+            <p class="font-bold text-lg">{translations[language].myFarms}</p>
         </div>
 
         <div class="flex flex-col gap-4">
-            <p>Select your farm and we'll show you details.</p>
-            
+            <p>{translations[language].selectFarmDetails}</p>
+
             {#each farms as farm}
-                <button 
+                <button
                     onclick={() => selectFarm(farm.id)}
                     class="flex items-center p-4 bg-[#f3eee6] rounded-xl border-2 cursor-pointer transition-all duration-200 {selectedFarm === farm.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] hover:border-[#d0cab5]'}">
                     <span class="text-5xl mr-3.5">{farm.icon}</span>
@@ -191,11 +383,11 @@
     </div>
 
     {#if selectedFarm && !showSoilWeather}
-        <button 
+        <button
             onclick={confirmFarmSelection}
             class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
             <MapPin size="28" color="#ffffff" />
-            <p class="text-lg font-semibold text-white">Select Farm</p>
+            <p class="text-lg font-semibold text-white">{translations[language].selectFarmButton}</p>
         </button>
     {/if}
 
@@ -206,11 +398,11 @@
         <div class="flex flex-col gap-4 p-6 bg-white/50 rounded-xl shadow-2xl w-full">
             <div class="flex items-center gap-2">
                 <ChartLine size="30" color="#84c059" />
-                <p class="font-bold text-lg">Soil Health</p>
+                <p class="font-bold text-lg">{translations[language].soilHealth}</p>
             </div>
 
             <div class="grid grid-cols-2 gap-3 mt-4">
-                
+
                 {#snippet healthCard(element, symbol, percent, status, statusColor, actualValue, unit, maxValue)}
                     <div class="flex flex-col p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 shadow-sm">
                         <div class="flex items-center justify-between mb-3">
@@ -220,11 +412,11 @@
                             </div>
                             <span class="text-xs px-2 py-1 rounded-full {statusColor} font-medium">{status}</span>
                         </div>
-                        
+
                         <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden mb-2">
                             <div class="bg-gradient-to-r from-[#84c059] to-[#6fa045] h-2.5 rounded-full transition-all duration-300" style={`width: ${percent}%`}></div>
                         </div>
-                        
+
                         <div class="flex justify-between items-center text-xs text-gray-600">
                             <span>0</span>
                             <span class="font-semibold text-[#84c059]">{actualValue}{unit}</span>
@@ -233,23 +425,23 @@
                     </div>
                 {/snippet}
 
-                {@render healthCard('Nitrogen', '𝐍', 75, 'Good', 'bg-green-100 text-green-700', '75', '%', '100')}
-                {@render healthCard('Phosphorus', '𝐏', 65, 'Moderate', 'bg-yellow-100 text-yellow-700', '65', '%', '100')}
-                {@render healthCard('Potassium', '𝐊', 85, 'Excellent', 'bg-emerald-100 text-emerald-700', '85', '%', '100')}
-                {@render healthCard('Salinity', '🧂', 18, 'Low', 'bg-blue-100 text-blue-700', '1.2', ' dS/m', '6.5')}
-                {@render healthCard('Acidity', '🧪', 69, 'Optimal', 'bg-green-100 text-green-700', '6.8', ' pH', '10')}
-                {@render healthCard('Moisture', '💧', 80, 'Good', 'bg-cyan-100 text-cyan-700', '80', '%', '100')}
-                {@render healthCard('Organic Matter', '🍂', 30, 'Low', 'bg-orange-100 text-orange-700', '3.2', '%', '10')}
-                
+                {@render healthCard('Nitrogen', '𝐍', 75, translations[language].good, 'bg-green-100 text-green-700', '75', '%', '100')}
+                {@render healthCard('Phosphorus', '𝐏', 65, translations[language].moderate, 'bg-yellow-100 text-yellow-700', '65', '%', '100')}
+                {@render healthCard('Potassium', '𝐊', 85, translations[language].excellent, 'bg-emerald-100 text-emerald-700', '85', '%', '100')}
+                {@render healthCard('Salinity', '🧂', 18, translations[language].low, 'bg-blue-100 text-blue-700', '1.2', ' dS/m', '6.5')}
+                {@render healthCard('Acidity', '🧪', 69, translations[language].optimal, 'bg-green-100 text-green-700', '6.8', ' pH', '10')}
+                {@render healthCard('Moisture', '💧', 80, translations[language].good, 'bg-cyan-100 text-cyan-700', '80', '%', '100')}
+                {@render healthCard('Organic Matter', '🍂', 30, translations[language].low, 'bg-orange-100 text-orange-700', '3.2', '%', '10')}
+
             </div>
 
             <!-- Overall Assessment -->
             <div class="flex flex-col gap-3 px-6 py-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">💡</span>
-                    <p class="font-semibold text-lg">Summary</p>
+                    <p class="font-semibold text-lg">{translations[language].summary}</p>
                 </div>
-                <p class="text-sm leading-relaxed">Low salinity is ideal for most vegetable crops. Good moisture retention suitable for current season planting. Consider adding compost or organic fertilizers to improve soil structure. </p>
+                <p class="text-sm leading-relaxed">{translations[language].lowSalinity}</p>
             </div>
         </div>
 
@@ -257,10 +449,10 @@
             <!-- Header -->
             <div class="flex items-center gap-2">
                 <Umbrella size="28" color="#84c059" />
-                <p class="font-bold text-xl">Weather Forecast</p>
+                <p class="font-bold text-xl">{translations[language].weatherForecast}</p>
             </div>
 
-            <p class="text-sm font-medium">Today is August 27, 2025 • Wet Season (Southwest Monsoon)</p>
+            <p class="text-sm font-medium">{translations[language].todayIs}</p>
 
             <!-- Today's Weather -->
             <div class="flex flex-col items-center p-6 rounded-2xl bg-gradient-to-br bg-[#f3eee6] gap-3">
@@ -270,32 +462,32 @@
                         <div class="flex items-center gap-1">
                             <span class="text-sm">☀️</span>
                             <span>32°C</span>
-                            <span class="text-xs text-gray-600 font-medium">Day</span>
+                            <span class="text-xs text-gray-600 font-medium">{translations[language].day}</span>
                         </div>
                         <span class="text-gray-400">/</span>
                         <div class="flex items-center gap-1">
                             <span class="text-sm">🌙</span>
                             <span>24°C</span>
-                            <span class="text-xs text-gray-600 font-medium">Night</span>
+                            <span class="text-xs text-gray-600 font-medium">{translations[language].night}</span>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 font-medium mt-1">Partly Cloudy</p>
+                    <p class="text-sm text-gray-600 font-medium mt-1">{translations[language].partlyCloudy}</p>
                 </div>
-                
+
                 <div class="grid grid-cols-3 gap-2 mt-2 w-full">
                     <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
                         <Droplet class="w-6 h-6 mb-1 text-blue-400" />
-                        <span class="text-xs font-medium text-gray-700">Humidity</span>
+                        <span class="text-xs font-medium text-gray-700">{translations[language].humidity}</span>
                         <span class="text-sm font-semibold">68%</span>
                     </div>
                     <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
                         <CloudRain class="w-6 h-6 mb-1 text-blue-500" />
-                        <span class="text-xs font-medium text-gray-700">Precipitation</span>
+                        <span class="text-xs font-medium text-gray-700">{translations[language].precipitation}</span>
                         <span class="text-sm font-semibold">0 mm</span>
                     </div>
                     <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
                         <Wind class="w-6 h-6 mb-1 text-gray-600 dark:text-gray-500" />
-                        <span class="text-xs font-medium text-gray-700">Wind Speed</span>
+                        <span class="text-xs font-medium text-gray-700">{translations[language].windSpeed}</span>
                         <span class="text-sm font-semibold">12 km/h SW</span>
                     </div>
                 </div>
@@ -306,49 +498,49 @@
                 <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
                     <span class="text-3xl">☀️</span>
                     <div class="flex flex-col">
-                        <p class="font-semibold text-sm">Tuesday</p>
+                        <p class="font-semibold text-sm">{translations[language].tuesday}</p>
                         <div class="flex items-center gap-2 text-xs">
                             <span class="flex items-center gap-1">☀️ 33°C</span>
                             <span>/</span>
                             <span class="flex items-center gap-1">🌙 25°C</span>
                         </div>
-                        <p class="text-xs text-gray-600">Sunny</p>
+                        <p class="text-xs text-gray-600">{translations[language].sunny}</p>
                     </div>
                 </div>
                 <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
                     <span class="text-3xl">🌦️</span>
                     <div class="flex flex-col">
-                        <p class="font-semibold text-sm">Wednesday</p>
+                        <p class="font-semibold text-sm">{translations[language].wednesday}</p>
                         <div class="flex items-center gap-2 text-xs">
                             <span class="flex items-center gap-1">☀️ 30°C</span>
                             <span>/</span>
                             <span class="flex items-center gap-1">🌙 23°C</span>
                         </div>
-                        <p class="text-xs text-gray-600">Showers</p>
+                        <p class="text-xs text-gray-600">{translations[language].showers}</p>
                     </div>
                 </div>
                 <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
                     <span class="text-3xl">⛅</span>
                     <div class="flex flex-col">
-                        <p class="font-semibold text-sm">Thursday</p>
+                        <p class="font-semibold text-sm">{translations[language].thursday}</p>
                         <div class="flex items-center gap-2 text-xs">
                             <span class="flex items-center gap-1">☀️ 31°C</span>
                             <span>/</span>
-                            <span class="flex items-center gap-1">🌙 24°C</span>
+                            <span class="flex items-center gap-1">� 24°C</span>
                         </div>
-                        <p class="text-xs text-gray-600">Cloudy</p>
+                        <p class="text-xs text-gray-600">{translations[language].cloudy}</p>
                     </div>
                 </div>
                 <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
                     <span class="text-3xl">🌧️</span>
                     <div class="flex flex-col">
-                        <p class="font-semibold text-sm">Friday</p>
+                        <p class="font-semibold text-sm">{translations[language].friday}</p>
                         <div class="flex items-center gap-2 text-xs">
                             <span class="flex items-center gap-1">☀️ 29°C</span>
                             <span>/</span>
                             <span class="flex items-center gap-1">🌙 22°C</span>
                         </div>
-                        <p class="text-xs text-gray-600">Heavy Rain</p>
+                        <p class="text-xs text-gray-600">{translations[language].heavyRain}</p>
                     </div>
                 </div>
             </div>
@@ -357,18 +549,18 @@
             <div class="flex flex-col gap-3 px-6 py-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">💡</span>
-                    <p class="font-semibold text-lg">Summary</p>
+                    <p class="font-semibold text-lg">{translations[language].summary}</p>
                 </div>
-                <p class="text-sm leading-relaxed">Southwest monsoon pattern typical for August. High humidity Thursday may require disease monitoring. Overall weather supports current season crop establishment. </p>
+                <p class="text-sm leading-relaxed">{translations[language].southwestMonsoon}</p>
             </div>
         </div>
 
         {#if !showCrops}
-            <button 
+            <button
                 onclick={generateAIPlan}
                 class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
                 <BrainCircuit size="28" color="#ffffff" />
-                <p class="text-lg font-semibold text-white">Generate AI Plan</p>
+                <p class="text-lg font-semibold text-white">{translations[language].generateAIPlan}</p>
             </button>
         {/if}
     {/if}
@@ -381,13 +573,13 @@
             <!-- Header -->
             <div class="flex items-center gap-2">
                 <Leaf size="28" color="#84c059" />
-                <p class="font-bold text-xl">Recommended Crops</p>
+                <p class="font-bold text-xl">{translations[language].recommendedCrops}</p>
             </div>
 
-            <p>Select your starting crop and we'll plan your crop rotation.</p>
+            <p>{translations[language].selectStartingCrop}</p>
 
             {#each crops as crop}
-                <button 
+                <button
                     onclick={() => selectCrop(crop.id)}
                     class="flex flex-col border-2 rounded-xl p-4 gap-4 cursor-pointer transition-all duration-200 {selectedCrop === crop.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] bg-[#f3eee6] hover:border-[#d0cab5]'}">
                     <!-- Left: Icon + Name -->
@@ -421,11 +613,11 @@
         </div>
 
         {#if selectedCrop && !showSuggestions}
-            <button 
+            <button
                 onclick={confirmCropSelection}
                 class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
                 <Clover size="28" color="#ffffff" />
-                <p class="text-lg font-semibold text-white">Select Crop</p>
+                <p class="text-lg font-semibold text-white">{translations[language].selectCropButton}</p>
             </button>
         {/if}
     {/if}
@@ -437,26 +629,26 @@
             <!-- Header -->
             <div class="flex items-center gap-3">
                 <Clover size="28" color="#84c059" />
-                <h2 class="font-bold text-xl">Multi-Cropping Suggestions</h2>
+                <h2 class="font-bold text-xl">{translations[language].multiCroppingSuggestions}</h2>
             </div>
 
             <!-- Good Companions Section -->
             <div class="flex flex-col gap-4">
                 <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                🤝 <span>Good Companions (Plant Together)</span>
+                🤝 <span>{translations[language].goodCompanions}</span>
                 </h3>
-                
+
                 <div class="grid gap-4">
                 <!-- Basil -->
                 <div class="flex items-center gap-4 p-4 bg-green-50/80 rounded-xl border-2 border-green-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🌿</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Basil</p>
-                    <p class="text-gray-600 text-sm mb-2">Repels pests, improves tomato flavor. Plant 30cm away from tomato base.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].basilName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].basilDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">Pest Control</span>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">Flavor Enhancer</span>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">Space Efficient</span>
+                        {#each translations[language].basilTags as tag}
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -465,12 +657,12 @@
                 <div class="flex items-center gap-4 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🥕</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Carrots</p>
-                    <p class="text-gray-600 text-sm mb-2">Aerates soil, different root depth. Harvest before tomatoes need more space.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].carrotsName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].carrotsDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">Soil Improvement</span>
-                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">Early Harvest</span>
-                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">Root Diversity</span>
+                        {#each translations[language].carrotsTags as tag}
+                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -479,12 +671,12 @@
                 <div class="flex items-center gap-4 p-4 bg-emerald-50/80 rounded-xl border-2 border-emerald-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🌱</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Lettuce</p>
-                    <p class="text-gray-600 text-sm mb-2">Ground cover reduces weeds, cool-season crop. Plant between tomato rows.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].lettuceName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].lettuceDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">Ground Cover</span>
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">Quick Growing</span>
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">Weed Control</span>
+                        {#each translations[language].lettuceTags as tag}
+                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -493,12 +685,12 @@
                 <div class="flex items-center gap-4 p-4 bg-purple-50/80 rounded-xl border-2 border-purple-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🧅</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Onions</p>
-                    <p class="text-gray-600 text-sm mb-2">Natural pest deterrent, different nutrient needs. Border planting recommended.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].onionsName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].onionsDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">Pest Deterrent</span>
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">Sulfur Benefits</span>
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">Perimeter Plant</span>
+                        {#each translations[language].onionsTags as tag}
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -508,20 +700,20 @@
             <!-- Bad Neighbors Section -->
             <div class="flex flex-col gap-4">
                 <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                ❌ <span>Bad Neighbors (Avoid Planting Together)</span>
+                ❌ <span>{translations[language].badNeighbors}</span>
                 </h3>
-                
+
                 <div class="grid gap-4">
                 <!-- Potatoes -->
                 <div class="flex items-center gap-4 p-4 bg-red-50/80 rounded-xl border-2 border-red-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🥔</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Potatoes</p>
-                    <p class="text-gray-600 text-sm mb-2">Both are nightshades, compete for nutrients. Share same diseases and pests.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].potatoesName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].potatoesDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">Disease Risk</span>
-                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">Nutrient Competition</span>
-                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">Same Family</span>
+                        {#each translations[language].potatoesTags as tag}
+                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -530,12 +722,12 @@
                 <div class="flex items-center gap-4 p-4 bg-yellow-50/80 rounded-xl border-2 border-yellow-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🌽</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Corn</p>
-                    <p class="text-gray-600 text-sm mb-2">Heavy nitrogen user, creates too much shade. Attracts tomato fruitworm.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].cornName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].cornDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">Heavy Feeder</span>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">Shading Issues</span>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">Pest Attraction</span>
+                        {#each translations[language].cornTags as tag}
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -545,21 +737,21 @@
             <!-- After Harvest Section -->
             <div class="flex flex-col gap-4">
                 <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                🔄 <span>After Harvest Succession</span>
+                🔄 <span>{translations[language].afterHarvest}</span>
                 </h3>
-                <p class="text-gray-600 text-sm">These crops will benefit from leftover nutrients after tomato harvest:</p>
-                
+                <p class="text-gray-600 text-sm">{translations[language].afterHarvestDesc}</p>
+
                 <div class="grid gap-4">
                 <!-- Leafy Greens -->
                 <div class="flex items-center gap-4 p-4 bg-teal-50/80 rounded-xl border-2 border-teal-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🥬</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Leafy Greens (Pechay, Kangkong)</p>
-                    <p class="text-gray-600 text-sm mb-2">Will use remaining nitrogen efficiently. Quick 30-45 day harvest cycle.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].leafyGreensName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].leafyGreensDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">Nitrogen Utilization</span>
-                        <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">Fast Growing</span>
-                        <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">Cool Season</span>
+                        {#each translations[language].leafyGreensTags as tag}
+                        <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -568,12 +760,12 @@
                 <div class="flex items-center gap-4 p-4 bg-lime-50/80 rounded-xl border-2 border-lime-400/50 backdrop-blur-sm">
                     <span class="text-5xl">🫘</span>
                     <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">Beans</p>
-                    <p class="text-gray-600 text-sm mb-2">Nitrogen-fixing legume restores soil nutrients. Improves soil for next crop cycle.</p>
+                    <p class="font-semibold text-gray-800 mb-1">{translations[language].beansName}</p>
+                    <p class="text-gray-600 text-sm mb-2">{translations[language].beansDesc}</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">Soil Restoration</span>
-                        <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">Nitrogen Fixing</span>
-                        <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">Protein Crop</span>
+                        {#each translations[language].beansTags as tag}
+                        <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">{tag}</span>
+                        {/each}
                     </div>
                     </div>
                 </div>
@@ -586,14 +778,14 @@
       <!-- Header -->
       <div class="flex items-center gap-3">
         <Calendar size="28" color="#84c059" />
-        <h2 class="font-bold text-xl">Multi-Crop Planting Timeline</h2>
+        <h2 class="font-bold text-xl">{translations[language].multiCropTimeline}</h2>
       </div>
 
       <!-- Timeline Container -->
       <div class="relative">
         <!-- Timeline Line -->
         <div class="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-600 rounded-full"></div>
-        
+
         <div class="flex flex-col gap-6">
           <!-- Week 1-2 -->
           <div class="relative flex gap-6 items-start">
@@ -602,13 +794,13 @@
             </div>
             <div class="flex-1 bg-green-50/80 backdrop-blur-sm rounded-xl border-2 border-green-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 1-2 (Land Preparation)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].landPreparation}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🚜 Soil Preparation & Base Fertilizer</h4>
-                <p class="text-gray-600 text-sm mb-3">Till soil, add compost (2 tons/hectare). Apply base fertilizer: 14-14-14 NPK (200kg/hectare).</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🚜 {translations[language].soilPrepDetails}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].soilPrepDetails}</p>
                 <div class="flex flex-wrap gap-2 mb-3">
-                  <span class="px-3 py-1 bg-green-200 text-green-800 rounded-lg text-sm font-medium">Plant: Carrot seeds directly, start tomato seedlings in nursery</span>
+                  <span class="px-3 py-1 bg-green-200 text-green-800 rounded-lg text-sm font-medium">{translations[language].plantCarrotTomato}</span>
                 </div>
               </div>
             </div>
@@ -621,13 +813,13 @@
             </div>
             <div class="flex-1 bg-blue-50/80 backdrop-blur-sm rounded-xl border-2 border-blue-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 3-4 (Transplanting)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].transplanting}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌱 Transplant Tomatoes & Plant Basil</h4>
-                <p class="text-gray-600 text-sm mb-3">Transplant 3-week-old tomato seedlings (60cm spacing). Plant basil seedlings around tomatoes.</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🌱 {translations[language].transplantTomatoesBasil}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].transplantTomatoesBasil}</p>
                 <div class="bg-blue-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-blue-800">Care: Daily watering, install stakes for tomatoes</span>
+                  <span class="text-sm font-medium text-blue-800">{translations[language].careDailyWatering}</span>
                 </div>
               </div>
             </div>
@@ -640,13 +832,13 @@
             </div>
             <div class="flex-1 bg-purple-50/80 backdrop-blur-sm rounded-xl border-2 border-purple-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 6-8 (First Side Dress)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].firstSideDress}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌿 Side Dressing & Maintenance</h4>
-                <p class="text-gray-600 text-sm mb-3">Apply first side dress fertilizer: Urea (50kg/hectare). Harvest baby carrots for thinning.</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🌿 {translations[language].sideDressingMaintenance}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].sideDressingMaintenance}</p>
                 <div class="bg-purple-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-purple-800">Care: Prune tomato suckers, tie to stakes, weed management</span>
+                  <span class="text-sm font-medium text-purple-800">{translations[language].pruneTomatoSuckers}</span>
                 </div>
               </div>
             </div>
@@ -659,13 +851,13 @@
             </div>
             <div class="flex-1 bg-pink-50/80 backdrop-blur-sm rounded-xl border-2 border-pink-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 10-12 (Flowering Stage)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].floweringStage}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌸 Flowering & Second Fertilizer</h4>
-                <p class="text-gray-600 text-sm mb-3">Tomatoes flowering, apply phosphorus-rich fertilizer (16-20-0). Harvest mature carrots.</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🌸 {translations[language].floweringSecondFertilizer}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].floweringSecondFertilizer}</p>
                 <div class="bg-pink-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-pink-800">Care: Prune tomato suckers, tie to stakes, weed management</span>
+                  <span class="text-sm font-medium text-pink-800">{translations[language].pruneTomatoSuckers}</span>
                 </div>
               </div>
             </div>
@@ -678,13 +870,13 @@
             </div>
             <div class="flex-1 bg-orange-50/80 backdrop-blur-sm rounded-xl border-2 border-orange-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 14-18 (Fruiting & Harvest)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].mainHarvestPeriod}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🍅 Main Harvest Period</h4>
-                <p class="text-gray-600 text-sm mb-3">Peak tomato harvest begins. Apply final fertilizer: high-potassium (0-0-50).</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🍅 {translations[language].peakTomatoHarvest}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].peakTomatoHarvest}</p>
                 <div class="bg-orange-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-orange-800">Harvest: Continuous tomato picking, weekly basil harvest, prepare succession beds</span>
+                  <span class="text-sm font-medium text-orange-800">{translations[language].harvestContinuous}</span>
                 </div>
               </div>
             </div>
@@ -697,13 +889,13 @@
             </div>
             <div class="flex-1 bg-teal-50/80 backdrop-blur-sm rounded-xl border-2 border-teal-400/50 p-5">
               <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">Week 20+ (Succession Planting)</h3>
+                <h3 class="font-bold text-lg text-gray-800">{translations[language].successionPlanting}</h3>
               </div>
               <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🔄 End Cycle & Plant Next Crop</h4>
-                <p class="text-gray-600 text-sm mb-3">Final tomato harvest, clear beds. Plant leafy greens or beans for succession crop.</p>
+                <h4 class="font-semibold text-gray-700 mb-2">🔄 {translations[language].endCyclePlantNext}</h4>
+                <p class="text-gray-600 text-sm mb-3">{translations[language].endCyclePlantNext}</p>
                 <div class="bg-teal-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-teal-800">Prep: Soil test, add organic matter, plan next rotation cycle</span>
+                  <span class="text-sm font-medium text-teal-800">{translations[language].prepSoilTest}</span>
                 </div>
               </div>
             </div>
@@ -712,11 +904,11 @@
       </div>
     </div>
 
-        <button 
+        <button
             onclick={startFarming}
             class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
             <Pickaxe size="28" color="#ffffff" />
-            <p class="text-lg font-semibold text-white">Start Farming</p>
+            <p class="text-lg font-semibold text-white">{translations[language].startFarming}</p>
         </button>
     {/if}
 
