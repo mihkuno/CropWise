@@ -105,6 +105,16 @@
             beansName: 'Beans',
             beansDesc: 'Nitrogen-fixing legume restores soil nutrients. Improves soil for next crop cycle.',
             beansTags: ['Soil Restoration', 'Nitrogen Fixing', 'Protein Crop'],
+
+            tuesday: 'Tuesday',
+            wednesday: 'Wednesday',
+            thursday: 'Thursday',
+            friday: 'Friday',
+            good: 'Good',
+            moderate: 'Moderate',
+            excellent: 'Excellent',
+            low: 'Low',
+            optimal: 'Optimal'
         },
         'Filipino': {
             welcome: 'Maligayang Pagdating, Juan Carlos Santos',
@@ -199,6 +209,16 @@
             beansName: 'Munggo / Beans',
             beansDesc: 'Legume na nagbabalik ng nitrogen sa lupa. Pinapabuti ang lupa para sa susunod na pagtatanim.',
             beansTags: ['Pagpapanumbalik ng Lupa', 'Nag-aayos ng Nitrogen', 'Pananim na May Protina'],
+
+            tuesday: 'Martes',
+            wednesday: 'Miyerkules',
+            thursday: 'Huwebes',
+            friday: 'Biyernes',
+            good: 'Maganda',
+            moderate: 'Katamtaman',
+            excellent: 'Mahusay',
+            low: 'Mababa',
+            optimal: 'Pinakamainam'
         }
     };
 
@@ -324,593 +344,607 @@
     }
 </script>
 
-<div class="max-w-lg m-auto flex flex-col gap-8 items-center justify-center py-14">
+<!-- Add viewport meta tag for responsiveness -->
+<svelte:head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</svelte:head>
 
-    <div class="flex items-center bg-[#84c059] rounded-xl shadow-2xl justify-between py-6 px-8 w-full">
-        <div class="flex items-center gap-4">
-            <div class="bg-white/10 rounded-full">
-                <Sprout size="60" color="#ffffff" />
+<div class="min-h-screen  flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl flex flex-col gap-6 items-center py-8">
+
+        <!-- Header Section -->
+        <div class="flex items-center bg-[#84c059] rounded-xl shadow-2xl justify-between p-6 sm:p-8 w-full">
+            <div class="flex items-center gap-3 sm:gap-4">
+                <div class="bg-white/10 rounded-full p-2 sm:p-3">
+                    <Sprout size="40" class="sm:w-16 sm:h-16" color="#ffffff" />
+                </div>
+                <div>
+                    <p class="text-2xl sm:text-3xl font-bold text-white">CropWise</p>
+                    <p class="text-sm sm:text-base font-semibold text-white">{translations[language].welcome}</p>
+                </div>
             </div>
-            <div>
-                <p class="text-3xl font-bold text-white">CropWise</p>
-                <p class="text-sm font-semibold text-white">{translations[language].welcome}</p>
-            </div>
-        </div>
-        <button
-            type="button"
-            onclick={handleLogout}
-            class="ml-10 bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 cursor-pointer">
-            {translations[language].logout}</button>
-    </div>
-
-    <!-- pills for history and language -->
-    <div class="flex gap-2 w-full">
-        <button
-            onclick={toggleLanguage}
-            class="flex items-center gap-2 px-4.5 py-2.5 rounded- font-semibold bg-white rounded-2xl shadow-2xl cursor-pointer hover:opacity-90">
-            <Globe size="20" />
-            <p class="text-sm">{language}</p>
-        </button>
-        <button
-            onclick={goToHistory}
-            class="flex items-center gap-2 px-4.5 py-2.5 rounded- font-semibold bg-white rounded-2xl shadow-2xl cursor-pointer hover:opacity-90">
-            <History size="20" />
-            <p class="text-sm">{translations[language].history}</p>
-        </button>
-    </div>
-
-    <div class="flex flex-col gap-4 p-6 bg-white/50 rounded-xl shadow-2xl w-full">
-        <div class="flex items-center gap-2">
-            <MapPin size="30" color="#84c059" />
-            <p class="font-bold text-lg">{translations[language].myFarms}</p>
+            <button
+                type="button"
+                on:click={handleLogout}
+                class="ml-4 sm:ml-10 bg-white/20 text-white font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg hover:bg-white/30 cursor-pointer text-sm sm:text-base">
+                {translations[language].logout}
+            </button>
         </div>
 
-        <div class="flex flex-col gap-4">
-            <p>{translations[language].selectFarmDetails}</p>
-
-            {#each farms as farm}
-                <button
-                    onclick={() => selectFarm(farm.id)}
-                    class="flex items-center p-4 bg-[#f3eee6] rounded-xl border-2 cursor-pointer transition-all duration-200 {selectedFarm === farm.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] hover:border-[#d0cab5]'}">
-                    <span class="text-5xl mr-3.5">{farm.icon}</span>
-                    <div class="text-left">
-                        <p class="font-semibold mb-1">{farm.name}</p>
-                        <p>{farm.details}</p>
-                        <p>{farm.location}</p>
-                    </div>
-                </button>
-            {/each}
+        <!-- Pills for history and language -->
+        <div class="flex gap-2 w-full justify-between sm:justify-start">
+            <button
+                on:click={toggleLanguage}
+                class="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl font-semibold bg-white shadow-2xl cursor-pointer hover:opacity-90 text-sm">
+                <Globe size="18" class="sm:w-5 sm:h-5" />
+                <p>{language}</p>
+            </button>
+            <button
+                on:click={goToHistory}
+                class="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl font-semibold bg-white shadow-2xl cursor-pointer hover:opacity-90 text-sm">
+                <History size="18" class="sm:w-5 sm:h-5" />
+                <p>{translations[language].history}</p>
+            </button>
         </div>
-    </div>
 
-    {#if selectedFarm && !showSoilWeather}
-        <button
-            onclick={confirmFarmSelection}
-            class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
-            <MapPin size="28" color="#ffffff" />
-            <p class="text-lg font-semibold text-white">{translations[language].selectFarmButton}</p>
-        </button>
-    {/if}
-
-    {#if showSoilWeather}
-        <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
-
-        <!-- soil health -->
-        <div class="flex flex-col gap-4 p-6 bg-white/50 rounded-xl shadow-2xl w-full">
+        <!-- My Farms Section -->
+        <div class="flex flex-col gap-4 p-5 sm:p-6 bg-white/50 rounded-xl shadow-2xl w-full">
             <div class="flex items-center gap-2">
-                <ChartLine size="30" color="#84c059" />
-                <p class="font-bold text-lg">{translations[language].soilHealth}</p>
+                <MapPin size="24" class="sm:w-8 sm:h-8" color="#84c059" />
+                <p class="font-bold text-base sm:text-lg">{translations[language].myFarms}</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mt-4">
+            <div class="flex flex-col gap-3 sm:gap-4">
+                <p class="text-sm sm:text-base">{translations[language].selectFarmDetails}</p>
 
-                {#snippet healthCard(element, symbol, percent, status, statusColor, actualValue, unit, maxValue)}
-                    <div class="flex flex-col p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 shadow-sm">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-lg">{symbol}</span>
-                                <span class="text-sm font-semibold text-gray-800">{element}</span>
+                {#each farms as farm}
+                    <button
+                        on:click={() => selectFarm(farm.id)}
+                        class="flex items-start p-3 sm:p-4 bg-[#f3eee6] rounded-xl border-2 cursor-pointer transition-all duration-200
+                        {selectedFarm === farm.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] hover:border-[#d0cab5]'}">
+                        <span class="text-4xl sm:text-5xl mr-3 sm:mr-3.5 flex-shrink-0">{farm.icon}</span>
+                        <div class="text-left flex-grow">
+                            <p class="font-semibold mb-0.5 sm:mb-1 text-base sm:text-lg">{farm.name}</p>
+                            <p class="text-sm text-gray-700">{farm.details}</p>
+                            <p class="text-xs text-gray-600">{farm.location}</p>
+                        </div>
+                    </button>
+                {/each}
+            </div>
+        </div>
+
+        {#if selectedFarm && !showSoilWeather}
+            <button
+                on:click={confirmFarmSelection}
+                class="flex items-center justify-center p-3 sm:p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90 text-base sm:text-lg">
+                <MapPin size="24" class="sm:w-7 sm:h-7" color="#ffffff" />
+                <p class="font-semibold text-white">{translations[language].selectFarmButton}</p>
+            </button>
+        {/if}
+
+        {#if showSoilWeather}
+            <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
+
+            <!-- Soil Health Section -->
+            <div class="flex flex-col gap-4 p-5 sm:p-6 bg-white/50 rounded-xl shadow-2xl w-full">
+                <div class="flex items-center gap-2">
+                    <ChartLine size="24" class="sm:w-8 sm:h-8" color="#84c059" />
+                    <p class="font-bold text-base sm:text-lg">{translations[language].soilHealth}</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+
+                    {#snippet healthCard(element, symbol, percent, status, statusColor, actualValue, unit, maxValue)}
+                        <div class="flex flex-col p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">{symbol}</span>
+                                    <span class="text-sm font-semibold text-gray-800">{element}</span>
+                                </div>
+                                <span class="text-xs px-2 py-1 rounded-full {statusColor} font-medium">{status}</span>
                             </div>
-                            <span class="text-xs px-2 py-1 rounded-full {statusColor} font-medium">{status}</span>
-                        </div>
 
-                        <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden mb-2">
-                            <div class="bg-gradient-to-r from-[#84c059] to-[#6fa045] h-2.5 rounded-full transition-all duration-300" style={`width: ${percent}%`}></div>
-                        </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden mb-2">
+                                <div class="bg-gradient-to-r from-[#84c059] to-[#6fa045] h-2.5 rounded-full transition-all duration-300" style={`width: ${percent}%`}></div>
+                            </div>
 
-                        <div class="flex justify-between items-center text-xs text-gray-600">
-                            <span>0</span>
-                            <span class="font-semibold text-[#84c059]">{actualValue}{unit}</span>
-                            <span>{maxValue}{unit}</span>
+                            <div class="flex justify-between items-center text-xs text-gray-600">
+                                <span>0</span>
+                                <span class="font-semibold text-[#84c059]">{actualValue}{unit}</span>
+                                <span>{maxValue}{unit}</span>
+                            </div>
                         </div>
+                    {/snippet}
+
+                    {@render healthCard('Nitrogen', '𝐍', 75, translations[language].good, 'bg-green-100 text-green-700', '75', '%', '100')}
+                    {@render healthCard('Phosphorus', '𝐏', 65, translations[language].moderate, 'bg-yellow-100 text-yellow-700', '65', '%', '100')}
+                    {@render healthCard('Potassium', '𝐊', 85, translations[language].excellent, 'bg-emerald-100 text-emerald-700', '85', '%', '100')}
+                    {@render healthCard('Salinity', '�', 18, translations[language].low, 'bg-blue-100 text-blue-700', '1.2', ' dS/m', '6.5')}
+                    {@render healthCard('Acidity', '🧪', 69, translations[language].optimal, 'bg-green-100 text-green-700', '6.8', ' pH', '10')}
+                    {@render healthCard('Moisture', '💧', 80, translations[language].good, 'bg-cyan-100 text-cyan-700', '80', '%', '100')}
+                    {@render healthCard('Organic Matter', '🍂', 30, translations[language].low, 'bg-orange-100 text-orange-700', '3.2', '%', '10')}
+
+                </div>
+
+                <!-- Overall Assessment -->
+                <div class="flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl sm:text-2xl">💡</span>
+                        <p class="font-semibold text-base sm:text-lg">{translations[language].summary}</p>
                     </div>
-                {/snippet}
-
-                {@render healthCard('Nitrogen', '𝐍', 75, translations[language].good, 'bg-green-100 text-green-700', '75', '%', '100')}
-                {@render healthCard('Phosphorus', '𝐏', 65, translations[language].moderate, 'bg-yellow-100 text-yellow-700', '65', '%', '100')}
-                {@render healthCard('Potassium', '𝐊', 85, translations[language].excellent, 'bg-emerald-100 text-emerald-700', '85', '%', '100')}
-                {@render healthCard('Salinity', '🧂', 18, translations[language].low, 'bg-blue-100 text-blue-700', '1.2', ' dS/m', '6.5')}
-                {@render healthCard('Acidity', '🧪', 69, translations[language].optimal, 'bg-green-100 text-green-700', '6.8', ' pH', '10')}
-                {@render healthCard('Moisture', '💧', 80, translations[language].good, 'bg-cyan-100 text-cyan-700', '80', '%', '100')}
-                {@render healthCard('Organic Matter', '🍂', 30, translations[language].low, 'bg-orange-100 text-orange-700', '3.2', '%', '10')}
-
+                    <p class="text-sm leading-relaxed">{translations[language].lowSalinity}</p>
+                </div>
             </div>
 
-            <!-- Overall Assessment -->
-            <div class="flex flex-col gap-3 px-6 py-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
+            <!-- Weather Forecast Section -->
+            <div class="flex flex-col gap-4 p-5 sm:p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
+                <!-- Header -->
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl">💡</span>
-                    <p class="font-semibold text-lg">{translations[language].summary}</p>
+                    <Umbrella size="24" class="sm:w-7 sm:h-7" color="#84c059" />
+                    <p class="font-bold text-base sm:text-xl">{translations[language].weatherForecast}</p>
                 </div>
-                <p class="text-sm leading-relaxed">{translations[language].lowSalinity}</p>
-            </div>
-        </div>
 
-        <div class="flex flex-col gap-4 p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
-            <!-- Header -->
-            <div class="flex items-center gap-2">
-                <Umbrella size="28" color="#84c059" />
-                <p class="font-bold text-xl">{translations[language].weatherForecast}</p>
-            </div>
+                <p class="text-sm font-medium">{translations[language].todayIs}</p>
 
-            <p class="text-sm font-medium">{translations[language].todayIs}</p>
-
-            <!-- Today's Weather -->
-            <div class="flex flex-col items-center p-6 rounded-2xl bg-gradient-to-br bg-[#f3eee6] gap-3">
-                <span class="text-6xl mb-2">⛅</span>
-                <div class="text-center">
-                    <div class="flex items-center justify-center gap-4 text-lg font-semibold">
-                        <div class="flex items-center gap-1">
-                            <span class="text-sm">☀️</span>
-                            <span>32°C</span>
-                            <span class="text-xs text-gray-600 font-medium">{translations[language].day}</span>
+                <!-- Today's Weather -->
+                <div class="flex flex-col items-center p-5 sm:p-6 rounded-2xl bg-gradient-to-br bg-[#f3eee6] gap-3">
+                    <span class="text-5xl sm:text-6xl mb-2">⛅</span>
+                    <div class="text-center">
+                        <div class="flex items-center justify-center gap-3 sm:gap-4 text-base sm:text-lg font-semibold">
+                            <div class="flex items-center gap-1">
+                                <span class="text-sm">☀️</span>
+                                <span>32°C</span>
+                                <span class="text-xs text-gray-600 font-medium">{translations[language].day}</span>
+                            </div>
+                            <span class="text-gray-400">/</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-sm">🌙</span>
+                                <span>24°C</span>
+                                <span class="text-xs text-gray-600 font-medium">{translations[language].night}</span>
+                            </div>
                         </div>
-                        <span class="text-gray-400">/</span>
-                        <div class="flex items-center gap-1">
-                            <span class="text-sm">🌙</span>
-                            <span>24°C</span>
-                            <span class="text-xs text-gray-600 font-medium">{translations[language].night}</span>
+                        <p class="text-sm text-gray-600 font-medium mt-1">{translations[language].partlyCloudy}</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 mt-2 w-full">
+                        <div class="flex flex-col items-center p-3 sm:p-4 bg-white/50 rounded-lg">
+                            <Droplet class="w-5 h-5 sm:w-6 sm:h-6 mb-1 text-blue-400" />
+                            <span class="text-xs font-medium text-gray-700">{translations[language].humidity}</span>
+                            <span class="text-sm font-semibold">68%</span>
+                        </div>
+                        <div class="flex flex-col items-center p-3 sm:p-4 bg-white/50 rounded-lg">
+                            <CloudRain class="w-5 h-5 sm:w-6 sm:h-6 mb-1 text-blue-500" />
+                            <span class="text-xs font-medium text-gray-700">{translations[language].precipitation}</span>
+                            <span class="text-sm font-semibold">0 mm</span>
+                        </div>
+                        <div class="flex flex-col items-center p-3 sm:p-4 bg-white/50 rounded-lg">
+                            <Wind class="w-5 h-5 sm:w-6 sm:h-6 mb-1 text-gray-600 dark:text-gray-500" />
+                            <span class="text-xs font-medium text-gray-700">{translations[language].windSpeed}</span>
+                            <span class="text-sm font-semibold">12 km/h SW</span>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 font-medium mt-1">{translations[language].partlyCloudy}</p>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2 mt-2 w-full">
-                    <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
-                        <Droplet class="w-6 h-6 mb-1 text-blue-400" />
-                        <span class="text-xs font-medium text-gray-700">{translations[language].humidity}</span>
-                        <span class="text-sm font-semibold">68%</span>
-                    </div>
-                    <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
-                        <CloudRain class="w-6 h-6 mb-1 text-blue-500" />
-                        <span class="text-xs font-medium text-gray-700">{translations[language].precipitation}</span>
-                        <span class="text-sm font-semibold">0 mm</span>
-                    </div>
-                    <div class="flex flex-col items-center p-4 bg-white/50 rounded-lg">
-                        <Wind class="w-6 h-6 mb-1 text-gray-600 dark:text-gray-500" />
-                        <span class="text-xs font-medium text-gray-700">{translations[language].windSpeed}</span>
-                        <span class="text-sm font-semibold">12 km/h SW</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next days -->
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
-                    <span class="text-3xl">☀️</span>
-                    <div class="flex flex-col">
-                        <p class="font-semibold text-sm">{translations[language].tuesday}</p>
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="flex items-center gap-1">☀️ 33°C</span>
-                            <span>/</span>
-                            <span class="flex items-center gap-1">🌙 25°C</span>
+                <!-- Next days -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                    <div class="p-3 sm:p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
+                        <span class="text-2xl sm:text-3xl">☀️</span>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-sm">{translations[language].tuesday}</p>
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="flex items-center gap-1">☀️ 33°C</span>
+                                <span>/</span>
+                                <span class="flex items-center gap-1">🌙 25°C</span>
+                            </div>
+                            <p class="text-xs text-gray-600">{translations[language].sunny}</p>
                         </div>
-                        <p class="text-xs text-gray-600">{translations[language].sunny}</p>
                     </div>
-                </div>
-                <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
-                    <span class="text-3xl">🌦️</span>
-                    <div class="flex flex-col">
-                        <p class="font-semibold text-sm">{translations[language].wednesday}</p>
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="flex items-center gap-1">☀️ 30°C</span>
-                            <span>/</span>
-                            <span class="flex items-center gap-1">🌙 23°C</span>
+                    <div class="p-3 sm:p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
+                        <span class="text-2xl sm:text-3xl">🌦️</span>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-sm">{translations[language].wednesday}</p>
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="flex items-center gap-1">☀️ 30°C</span>
+                                <span>/</span>
+                                <span class="flex items-center gap-1">🌙 23°C</span>
+                            </div>
+                            <p class="text-xs text-gray-600">{translations[language].showers}</p>
                         </div>
-                        <p class="text-xs text-gray-600">{translations[language].showers}</p>
                     </div>
-                </div>
-                <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
-                    <span class="text-3xl">⛅</span>
-                    <div class="flex flex-col">
-                        <p class="font-semibold text-sm">{translations[language].thursday}</p>
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="flex items-center gap-1">☀️ 31°C</span>
-                            <span>/</span>
-                            <span class="flex items-center gap-1">� 24°C</span>
+                    <div class="p-3 sm:p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
+                        <span class="text-2xl sm:text-3xl">⛅</span>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-sm">{translations[language].thursday}</p>
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="flex items-center gap-1">☀️ 31°C</span>
+                                <span>/</span>
+                                <span class="flex items-center gap-1">🌙 24°C</span>
+                            </div>
+                            <p class="text-xs text-gray-600">{translations[language].cloudy}</p>
                         </div>
-                        <p class="text-xs text-gray-600">{translations[language].cloudy}</p>
                     </div>
-                </div>
-                <div class="p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
-                    <span class="text-3xl">🌧️</span>
-                    <div class="flex flex-col">
-                        <p class="font-semibold text-sm">{translations[language].friday}</p>
-                        <div class="flex items-center gap-2 text-xs">
-                            <span class="flex items-center gap-1">☀️ 29°C</span>
-                            <span>/</span>
-                            <span class="flex items-center gap-1">🌙 22°C</span>
+                    <div class="p-3 sm:p-4 bg-[#f3eee6] rounded-xl flex items-center gap-3">
+                        <span class="text-2xl sm:text-3xl">🌧️</span>
+                        <div class="flex flex-col">
+                            <p class="font-semibold text-sm">{translations[language].friday}</p>
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="flex items-center gap-1">☀️ 29°C</span>
+                                <span>/</span>
+                                <span class="flex items-center gap-1">🌙 22°C</span>
+                            </div>
+                            <p class="text-xs text-gray-600">{translations[language].heavyRain}</p>
                         </div>
-                        <p class="text-xs text-gray-600">{translations[language].heavyRain}</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- weather summary -->
-            <div class="flex flex-col gap-3 px-6 py-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">💡</span>
-                    <p class="font-semibold text-lg">{translations[language].summary}</p>
+                <!-- Weather summary -->
+                <div class="flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-gradient-to-r from-[#f3eee6] to-[#e8f5e8] border-l-4 border-[#84c059]">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl sm:text-2xl">💡</span>
+                        <p class="font-semibold text-base sm:text-lg">{translations[language].summary}</p>
+                    </div>
+                    <p class="text-sm leading-relaxed">{translations[language].southwestMonsoon}</p>
                 </div>
-                <p class="text-sm leading-relaxed">{translations[language].southwestMonsoon}</p>
-            </div>
-        </div>
-
-        {#if !showCrops}
-            <button
-                onclick={generateAIPlan}
-                class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
-                <BrainCircuit size="28" color="#ffffff" />
-                <p class="text-lg font-semibold text-white">{translations[language].generateAIPlan}</p>
-            </button>
-        {/if}
-    {/if}
-
-    {#if showCrops}
-        <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
-
-        <!-- recommended crops -->
-        <div class="flex flex-col gap-4 p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
-            <!-- Header -->
-            <div class="flex items-center gap-2">
-                <Leaf size="28" color="#84c059" />
-                <p class="font-bold text-xl">{translations[language].recommendedCrops}</p>
             </div>
 
-            <p>{translations[language].selectStartingCrop}</p>
-
-            {#each crops as crop}
+            {#if !showCrops}
                 <button
-                    onclick={() => selectCrop(crop.id)}
-                    class="flex flex-col border-2 rounded-xl p-4 gap-4 cursor-pointer transition-all duration-200 {selectedCrop === crop.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] bg-[#f3eee6] hover:border-[#d0cab5]'}">
-                    <!-- Left: Icon + Name -->
-                    <div class="flex items-center gap-3">
-                        <span class="text-6xl">{crop.icon}</span>
-                        <div class="flex justify-between items-center w-full">
-                            <p class="font-semibold text-xl text-left">{crop.name}</p>
-                            <span class="text-xs bg-black text-white px-2 py-1.5 rounded-lg w-fit">{crop.category}</span>
-                        </div>
-                    </div>
-
-                    <!-- Right: Details -->
-                    <div class="flex flex-col gap-3">
-                        <!-- Description -->
-                        <p class="text-sm text-gray-700 leading-snug text-left">
-                            {crop.description}
-                        </p>
-
-                        <!-- Quick Facts (grid instead of stacked) -->
-                        <div class="grid grid-cols-2 gap-y-1 gap-x-4 text-sm text-left">
-                            <p><span class="font-semibold">🌱 Growth:</span> {crop.details.growth}</p>
-                            <p><span class="font-semibold">💧 Water:</span> {crop.details.water}</p>
-                            <p><span class="font-semibold">📏 Spacing:</span> {crop.details.spacing}</p>
-                            <p><span class="font-semibold">☀️ Season:</span> {crop.details.season}</p>
-                            <p><span class="font-semibold">🧪 pH:</span> {crop.details.ph}</p>
-                            <p><span class="font-semibold">🥕 Yield:</span> {crop.details.yield}</p>
-                        </div>
-                    </div>
+                    on:click={generateAIPlan}
+                    class="flex items-center justify-center p-3 sm:p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90 text-base sm:text-lg">
+                    <BrainCircuit size="24" class="sm:w-7 sm:h-7" color="#ffffff" />
+                    <p class="font-semibold text-white">{translations[language].generateAIPlan}</p>
                 </button>
-            {/each}
-        </div>
+            {/if}
+        {/if}
 
-        {#if selectedCrop && !showSuggestions}
+        {#if showCrops}
+            <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
+
+            <!-- Recommended Crops Section -->
+            <div class="flex flex-col gap-4 p-5 sm:p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
+                <!-- Header -->
+                <div class="flex items-center gap-2">
+                    <Leaf size="24" class="sm:w-7 sm:h-7" color="#84c059" />
+                    <p class="font-bold text-base sm:text-xl">{translations[language].recommendedCrops}</p>
+                </div>
+
+                <p class="text-sm sm:text-base">{translations[language].selectStartingCrop}</p>
+
+                {#each crops as crop}
+                    <button
+                        on:click={() => selectCrop(crop.id)}
+                        class="flex flex-col border-2 rounded-xl p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer transition-all duration-200
+                        {selectedCrop === crop.id ? 'border-[#84c059] bg-[#e8f5e8] shadow-md' : 'border-[#e8e3d9] bg-[#f3eee6] hover:border-[#d0cab5]'}">
+                        <!-- Left: Icon + Name -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-5xl sm:text-6xl flex-shrink-0">{crop.icon}</span>
+                            <div class="flex justify-between items-center w-full">
+                                <p class="font-semibold text-lg sm:text-xl text-left">{crop.name}</p>
+                                <span class="text-xs bg-black text-white px-2 py-1.5 rounded-lg w-fit">{crop.category}</span>
+                            </div>
+                        </div>
+
+                        <!-- Right: Details -->
+                        <div class="flex flex-col gap-3">
+                            <!-- Description -->
+                            <p class="text-sm text-gray-700 leading-snug text-left">
+                                {crop.description}
+                            </p>
+
+                            <!-- Quick Facts (grid instead of stacked) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-4 text-sm text-left">
+                                <p><span class="font-semibold">🌱 Growth:</span> {crop.details.growth}</p>
+                                <p><span class="font-semibold">💧 Water:</span> {crop.details.water}</p>
+                                <p><span class="font-semibold">📏 Spacing:</span> {crop.details.spacing}</p>
+                                <p><span class="font-semibold">☀️ Season:</span> {crop.details.season}</p>
+                                <p><span class="font-semibold">🧪 pH:</span> {crop.details.ph}</p>
+                                <p><span class="font-semibold">🥕 Yield:</span> {crop.details.yield}</p>
+                            </div>
+                        </div>
+                    </button>
+                {/each}
+            </div>
+
+            {#if selectedCrop && !showSuggestions}
+                <button
+                    on:click={confirmCropSelection}
+                    class="flex items-center justify-center p-3 sm:p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90 text-base sm:text-lg">
+                    <Clover size="24" class="sm:w-7 sm:h-7" color="#ffffff" />
+                    <p class="font-semibold text-white">{translations[language].selectCropButton}</p>
+                </button>
+            {/if}
+        {/if}
+
+        {#if showSuggestions}
+            <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
+
+            <!-- Multi-Cropping Suggestions Section -->
+            <div class="flex flex-col gap-6 p-5 sm:p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
+                <!-- Header -->
+                <div class="flex items-center gap-3">
+                    <Clover size="24" class="sm:w-7 sm:h-7" color="#84c059" />
+                    <h2 class="font-bold text-lg sm:text-xl">{translations[language].multiCroppingSuggestions}</h2>
+                </div>
+
+                <!-- Good Companions Section -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-base sm:text-lg text-gray-700 flex items-center gap-2">
+                    🤝 <span>{translations[language].goodCompanions}</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Basil -->
+                        <div class="flex items-start gap-4 p-4 bg-green-50/80 rounded-xl border-2 border-green-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🌿</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].basilName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].basilDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].basilTags as tag}
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Carrots -->
+                        <div class="flex items-start gap-4 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🥕</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].carrotsName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].carrotsDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].carrotsTags as tag}
+                                    <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lettuce -->
+                        <div class="flex items-start gap-4 p-4 bg-emerald-50/80 rounded-xl border-2 border-emerald-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🌱</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].lettuceName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].lettuceDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].lettuceTags as tag}
+                                    <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Onions -->
+                        <div class="flex items-start gap-4 p-4 bg-purple-50/80 rounded-xl border-2 border-purple-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🧅</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].onionsName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].onionsDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].onionsTags as tag}
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bad Neighbors Section -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-base sm:text-lg text-gray-700 flex items-center gap-2">
+                    ❌ <span>{translations[language].badNeighbors}</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Potatoes -->
+                        <div class="flex items-start gap-4 p-4 bg-red-50/80 rounded-xl border-2 border-red-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🥔</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].potatoesName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].potatoesDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].potatoesTags as tag}
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Corn -->
+                        <div class="flex items-start gap-4 p-4 bg-yellow-50/80 rounded-xl border-2 border-yellow-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🌽</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].cornName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].cornDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].cornTags as tag}
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- After Harvest Section -->
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-semibold text-base sm:text-lg text-gray-700 flex items-center gap-2">
+                    🔄 <span>{translations[language].afterHarvest}</span>
+                    </h3>
+                    <p class="text-gray-600 text-sm">{translations[language].afterHarvestDesc}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Leafy Greens -->
+                        <div class="flex items-start gap-4 p-4 bg-teal-50/80 rounded-xl border-2 border-teal-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🥬</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].leafyGreensName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].leafyGreensDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].leafyGreensTags as tag}
+                                    <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Beans -->
+                        <div class="flex items-start gap-4 p-4 bg-lime-50/80 rounded-xl border-2 border-lime-400/50 backdrop-blur-sm">
+                            <span class="text-4xl sm:text-5xl flex-shrink-0">🫘</span>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800 mb-1 text-base sm:text-lg">{translations[language].beansName}</p>
+                                <p class="text-gray-600 text-sm mb-2">{translations[language].beansDesc}</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {#each translations[language].beansTags as tag}
+                                    <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">{tag}</span>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Crop Timeline Section -->
+            <div class="flex flex-col gap-6 p-5 sm:p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full">
+                <!-- Header -->
+                <div class="flex items-center gap-3">
+                    <Calendar size="24" class="sm:w-7 sm:h-7" color="#84c059" />
+                    <h2 class="font-bold text-lg sm:text-xl">{translations[language].multiCropTimeline}</h2>
+                </div>
+
+                <!-- Timeline Container -->
+                <div class="relative">
+                    <!-- Timeline Line -->
+                    <div class="absolute left-8 sm:left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-600 rounded-full"></div>
+
+                    <div class="flex flex-col gap-6">
+                        <!-- Week 1-2 -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-green-100/80 backdrop-blur-sm border-4 border-green-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🚜</span>
+                            </div>
+                            <div class="flex-1 bg-green-50/80 backdrop-blur-sm rounded-xl border-2 border-green-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].landPreparation}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🚜 {translations[language].soilPrepDetails}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].soilPrepDetails}</p>
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <span class="px-2 py-1 bg-green-200 text-green-800 rounded-lg text-xs sm:text-sm font-medium">{translations[language].plantCarrotTomato}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Week 3-4 -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-blue-100/80 backdrop-blur-sm border-4 border-blue-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🌱</span>
+                            </div>
+                            <div class="flex-1 bg-blue-50/80 backdrop-blur-sm rounded-xl border-2 border-blue-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].transplanting}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🌱 {translations[language].transplantTomatoesBasil}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].transplantTomatoesBasil}</p>
+                                    <div class="bg-blue-100/60 rounded-lg p-3">
+                                        <span class="text-xs sm:text-sm font-medium text-blue-800">{translations[language].careDailyWatering}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Week 6-8 -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-purple-100/80 backdrop-blur-sm border-4 border-purple-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🌿</span>
+                            </div>
+                            <div class="flex-1 bg-purple-50/80 backdrop-blur-sm rounded-xl border-2 border-purple-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].firstSideDress}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🌿 {translations[language].sideDressingMaintenance}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].sideDressingMaintenance}</p>
+                                    <div class="bg-purple-100/60 rounded-lg p-3">
+                                        <span class="text-xs sm:text-sm font-medium text-purple-800">{translations[language].pruneTomatoSuckers}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Week 10-12 -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-pink-100/80 backdrop-blur-sm border-4 border-pink-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🌸</span>
+                            </div>
+                            <div class="flex-1 bg-pink-50/80 backdrop-blur-sm rounded-xl border-2 border-pink-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].floweringStage}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🌸 {translations[language].floweringSecondFertilizer}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].floweringSecondFertilizer}</p>
+                                    <div class="bg-pink-100/60 rounded-lg p-3">
+                                        <span class="text-xs sm:text-sm font-medium text-pink-800">{translations[language].pruneTomatoSuckers}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Week 14-18 -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-orange-100/80 backdrop-blur-sm border-4 border-orange-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🍅</span>
+                            </div>
+                            <div class="flex-1 bg-orange-50/80 backdrop-blur-sm rounded-xl border-2 border-orange-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].mainHarvestPeriod}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🍅 {translations[language].peakTomatoHarvest}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].peakTomatoHarvest}</p>
+                                    <div class="bg-orange-100/60 rounded-lg p-3">
+                                        <span class="text-xs sm:text-sm font-medium text-orange-800">{translations[language].harvestContinuous}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Week 20+ -->
+                        <div class="relative flex gap-4 sm:gap-6 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-teal-100/80 backdrop-blur-sm border-4 border-teal-400 rounded-full flex items-center justify-center z-10">
+                                <span class="text-xl sm:text-2xl">🔄</span>
+                            </div>
+                            <div class="flex-1 bg-teal-50/80 backdrop-blur-sm rounded-xl border-2 border-teal-400/50 p-4 sm:p-5">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <h3 class="font-bold text-base sm:text-lg text-gray-800">{translations[language].successionPlanting}</h3>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2 text-sm sm:text-base">🔄 {translations[language].endCyclePlantNext}</h4>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3">{translations[language].endCyclePlantNext}</p>
+                                    <div class="bg-teal-100/60 rounded-lg p-3">
+                                        <span class="text-xs sm:text-sm font-medium text-teal-800">{translations[language].prepSoilTest}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <button
-                onclick={confirmCropSelection}
-                class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
-                <Clover size="28" color="#ffffff" />
-                <p class="text-lg font-semibold text-white">{translations[language].selectCropButton}</p>
+                on:click={startFarming}
+                class="flex items-center justify-center p-3 sm:p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90 text-base sm:text-lg">
+                <Pickaxe size="24" class="sm:w-7 sm:h-7" color="#ffffff" />
+                <p class="font-semibold text-white">{translations[language].startFarming}</p>
             </button>
         {/if}
-    {/if}
 
-    {#if showSuggestions}
-        <hr class="mt-4 w-full h-[2px] border-0 bg-gradient-to-r from-transparent via-[#e8e3d9] to-transparent" />
-
-        <div class="flex flex-col gap-6 p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="flex items-center gap-3">
-                <Clover size="28" color="#84c059" />
-                <h2 class="font-bold text-xl">{translations[language].multiCroppingSuggestions}</h2>
-            </div>
-
-            <!-- Good Companions Section -->
-            <div class="flex flex-col gap-4">
-                <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                🤝 <span>{translations[language].goodCompanions}</span>
-                </h3>
-
-                <div class="grid gap-4">
-                <!-- Basil -->
-                <div class="flex items-center gap-4 p-4 bg-green-50/80 rounded-xl border-2 border-green-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🌿</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].basilName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].basilDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].basilTags as tag}
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Carrots -->
-                <div class="flex items-center gap-4 p-4 bg-orange-50/80 rounded-xl border-2 border-orange-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🥕</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].carrotsName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].carrotsDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].carrotsTags as tag}
-                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Lettuce -->
-                <div class="flex items-center gap-4 p-4 bg-emerald-50/80 rounded-xl border-2 border-emerald-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🌱</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].lettuceName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].lettuceDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].lettuceTags as tag}
-                        <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Onions -->
-                <div class="flex items-center gap-4 p-4 bg-purple-50/80 rounded-xl border-2 border-purple-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🧅</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].onionsName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].onionsDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].onionsTags as tag}
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            <!-- Bad Neighbors Section -->
-            <div class="flex flex-col gap-4">
-                <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                ❌ <span>{translations[language].badNeighbors}</span>
-                </h3>
-
-                <div class="grid gap-4">
-                <!-- Potatoes -->
-                <div class="flex items-center gap-4 p-4 bg-red-50/80 rounded-xl border-2 border-red-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🥔</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].potatoesName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].potatoesDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].potatoesTags as tag}
-                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Corn -->
-                <div class="flex items-center gap-4 p-4 bg-yellow-50/80 rounded-xl border-2 border-yellow-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🌽</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].cornName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].cornDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].cornTags as tag}
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            <!-- After Harvest Section -->
-            <div class="flex flex-col gap-4">
-                <h3 class="font-semibold text-lg text-gray-700 flex items-center gap-2">
-                🔄 <span>{translations[language].afterHarvest}</span>
-                </h3>
-                <p class="text-gray-600 text-sm">{translations[language].afterHarvestDesc}</p>
-
-                <div class="grid gap-4">
-                <!-- Leafy Greens -->
-                <div class="flex items-center gap-4 p-4 bg-teal-50/80 rounded-xl border-2 border-teal-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🥬</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].leafyGreensName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].leafyGreensDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].leafyGreensTags as tag}
-                        <span class="px-2 py-1 bg-teal-100 text-teal-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Beans -->
-                <div class="flex items-center gap-4 p-4 bg-lime-50/80 rounded-xl border-2 border-lime-400/50 backdrop-blur-sm">
-                    <span class="text-5xl">🫘</span>
-                    <div class="flex-1">
-                    <p class="font-semibold text-gray-800 mb-1">{translations[language].beansName}</p>
-                    <p class="text-gray-600 text-sm mb-2">{translations[language].beansDesc}</p>
-                    <div class="flex flex-wrap gap-2">
-                        {#each translations[language].beansTags as tag}
-                        <span class="px-2 py-1 bg-lime-100 text-lime-700 rounded-lg text-xs">{tag}</span>
-                        {/each}
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="flex flex-col gap-6 p-6 bg-white/70 backdrop-blur-md rounded-2xl shadow-xl w-full max-w-5xl mx-auto">
-      <!-- Header -->
-      <div class="flex items-center gap-3">
-        <Calendar size="28" color="#84c059" />
-        <h2 class="font-bold text-xl">{translations[language].multiCropTimeline}</h2>
-      </div>
-
-      <!-- Timeline Container -->
-      <div class="relative">
-        <!-- Timeline Line -->
-        <div class="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-600 rounded-full"></div>
-
-        <div class="flex flex-col gap-6">
-          <!-- Week 1-2 -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-green-100/80 backdrop-blur-sm border-4 border-green-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🚜</span>
-            </div>
-            <div class="flex-1 bg-green-50/80 backdrop-blur-sm rounded-xl border-2 border-green-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].landPreparation}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🚜 {translations[language].soilPrepDetails}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].soilPrepDetails}</p>
-                <div class="flex flex-wrap gap-2 mb-3">
-                  <span class="px-3 py-1 bg-green-200 text-green-800 rounded-lg text-sm font-medium">{translations[language].plantCarrotTomato}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Week 3-4 -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-blue-100/80 backdrop-blur-sm border-4 border-blue-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🌱</span>
-            </div>
-            <div class="flex-1 bg-blue-50/80 backdrop-blur-sm rounded-xl border-2 border-blue-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].transplanting}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌱 {translations[language].transplantTomatoesBasil}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].transplantTomatoesBasil}</p>
-                <div class="bg-blue-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-blue-800">{translations[language].careDailyWatering}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Week 6-8 -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-purple-100/80 backdrop-blur-sm border-4 border-purple-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🌿</span>
-            </div>
-            <div class="flex-1 bg-purple-50/80 backdrop-blur-sm rounded-xl border-2 border-purple-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].firstSideDress}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌿 {translations[language].sideDressingMaintenance}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].sideDressingMaintenance}</p>
-                <div class="bg-purple-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-purple-800">{translations[language].pruneTomatoSuckers}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Week 10-12 -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-pink-100/80 backdrop-blur-sm border-4 border-pink-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🌸</span>
-            </div>
-            <div class="flex-1 bg-pink-50/80 backdrop-blur-sm rounded-xl border-2 border-pink-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].floweringStage}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🌸 {translations[language].floweringSecondFertilizer}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].floweringSecondFertilizer}</p>
-                <div class="bg-pink-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-pink-800">{translations[language].pruneTomatoSuckers}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Week 14-18 -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-orange-100/80 backdrop-blur-sm border-4 border-orange-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🍅</span>
-            </div>
-            <div class="flex-1 bg-orange-50/80 backdrop-blur-sm rounded-xl border-2 border-orange-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].mainHarvestPeriod}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🍅 {translations[language].peakTomatoHarvest}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].peakTomatoHarvest}</p>
-                <div class="bg-orange-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-orange-800">{translations[language].harvestContinuous}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Week 20+ -->
-          <div class="relative flex gap-6 items-start">
-            <div class="flex-shrink-0 w-16 h-16 bg-teal-100/80 backdrop-blur-sm border-4 border-teal-400 rounded-full flex items-center justify-center z-10">
-              <span class="text-2xl">🔄</span>
-            </div>
-            <div class="flex-1 bg-teal-50/80 backdrop-blur-sm rounded-xl border-2 border-teal-400/50 p-5">
-              <div class="flex items-center gap-2 mb-3">
-                <h3 class="font-bold text-lg text-gray-800">{translations[language].successionPlanting}</h3>
-              </div>
-              <div class="mb-4">
-                <h4 class="font-semibold text-gray-700 mb-2">🔄 {translations[language].endCyclePlantNext}</h4>
-                <p class="text-gray-600 text-sm mb-3">{translations[language].endCyclePlantNext}</p>
-                <div class="bg-teal-100/60 rounded-lg p-3">
-                  <span class="text-sm font-medium text-teal-800">{translations[language].prepSoilTest}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-
-        <button
-            onclick={startFarming}
-            class="flex items-center justify-center p-4 w-full bg-[#84c059] rounded-3xl shadow-2xl gap-2 cursor-pointer hover:opacity-90">
-            <Pickaxe size="28" color="#ffffff" />
-            <p class="text-lg font-semibold text-white">{translations[language].startFarming}</p>
-        </button>
-    {/if}
-
 </div>
